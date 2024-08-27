@@ -18,6 +18,13 @@ func CreatPost(c *fiber.Ctx) error {
 	if err := c.BodyParser(&blogPost); err != nil {
 		fmt.Println("unable to parse body")
 	}
+	// Validate required fields
+	if blogPost.Title == "" || blogPost.Body == "" || blogPost.UserID == "0" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		  "message": "Missing required fields",
+		})
+	}
+
 	if err := database.DB.Create(&blogPost).Error; err != nil {
 		c.Status(400)
 		return c.JSON(fiber.Map{
@@ -77,6 +84,7 @@ func UniquePost(c *fiber.Ctx) error {
 	database.DB.Model(&blogs).Where("user_id=?", id).Preload("User").Find(&blogs)
 	return c.JSON(blogs)
 }
+
 func DeletePost(c *fiber.Ctx) error {
 	id, _ := strconv.Atoi(c.Params("id"))
 	blog := models.Blog{
