@@ -24,6 +24,7 @@ func main() {
 		AllowOrigins: "https://main--thebloggiesfrontend.netlify.app", // specify the frontend domain
 		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
 		AllowHeaders: "Content-Type,Authorization",
+		AllowCredentials: true,
 	}))
 	routes.Setup(app)
 	app.Listen(":"+port)
